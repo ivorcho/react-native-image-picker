@@ -49,6 +49,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import com.facebook.react.modules.core.PermissionListener;
+import com.facebook.react.modules.core.PermissionAwareActivity;
 
 import static com.imagepicker.utils.MediaUtils.*;
 import static com.imagepicker.utils.MediaUtils.createNewFile;
@@ -624,6 +625,9 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
         {
           ((ReactActivity) activity).requestPermissions(PERMISSIONS, requestCode, listener);
         }
+        else if (activity instanceof PermissionAwareActivity) {
+          ((PermissionAwareActivity) activity).requestPermissions(PERMISSIONS, requestCode, listener);
+        }
         else if (activity instanceof OnImagePickerPermissionsCallback)
         {
           ((OnImagePickerPermissionsCallback) activity).setPermissionListener(listener);
@@ -634,6 +638,8 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
           final String errorDescription = new StringBuilder(activity.getClass().getSimpleName())
                   .append(" must implement ")
                   .append(OnImagePickerPermissionsCallback.class.getSimpleName())
+                  .append(" or ")
+                  .append(PermissionAwareActivity.class.getSimpleName())
                   .toString();
           throw new UnsupportedOperationException(errorDescription);
         }
